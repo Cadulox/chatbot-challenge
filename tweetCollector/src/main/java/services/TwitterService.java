@@ -2,6 +2,7 @@ package services;
 
 import java.util.List;
 
+import repositories.TweetRepository;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -24,17 +25,10 @@ public class TwitterService {
 			searchResult = twitter.search(query);
 			List<Status> tweets = searchResult.getTweets();
 
-			for (Status status : tweets) {
-				System.out.println("@" + status.getUser().getScreenName()
-				// + " - Followers: " + status.getUser().getFollowersCount()
-				// + " - Date: " + status.getCreatedAt()
-						+ " - Message: " + status.getText());
-				// System.out.println();
-			}
-
+			TweetRepository.addTweet(tweets, tag);
 		} catch (TwitterException e) {
 			e.printStackTrace();
 			System.out.println("Failed to search tweets: " + e.getMessage());
 		}
-	}	
+	}
 }
