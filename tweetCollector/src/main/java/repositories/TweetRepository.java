@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 
 import twitter4j.Status;
 
@@ -18,14 +19,15 @@ public class TweetRepository {
 			client.connectSession();
 			for (Status status : tweets) {
 				StringBuilder sb = new StringBuilder("INSERT INTO chatbot.tweets ")
-						.append("(user, followers, message, requested_at, tag, tweet_date)")
+						.append("(user, followers, message, requested_at, tag, tweet_date, tweet_id)")
 						.append("VALUES (")
 						.append("'@").append(status.getUser().getScreenName()).append("', ")
 						.append(status.getUser().getFollowersCount()).append(", '")
 						.append(status.getText()).append("', '")
 						.append(LocalDateTime.now().format(formatter)).append("', '")
 						.append(tag).append("', '")
-						.append(status.getCreatedAt()).append("');");
+						.append(status.getCreatedAt()).append("', ")
+						.append(Uuids.timeBased()).append(");");
 				
 				String query = sb.toString();						
 				session.execute(query);
